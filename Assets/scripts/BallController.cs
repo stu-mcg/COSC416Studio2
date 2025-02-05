@@ -2,20 +2,26 @@ using UnityEngine;
 
 public class BallController : MonoBehaviour
 {
-    private bool  isBallLaunched = false;
     [SerializeField] private float force = 1f;
     [SerializeField] private InputManager inputManager;
+    [SerializeField] private Transform ballAnchor;
+    private bool  isBallLaunched = false;
     private Rigidbody ballRB;
     void Start()
     {
         ballRB = GetComponent<Rigidbody>();
-        inputManager.OnSpacePressed.AddListener(LaunchBall);;
+        inputManager.OnSpacePressed.AddListener(LaunchBall);
+        transform.parent = ballAnchor;
+        transform.localPosition = Vector3.zero;
+        ballRB.isKinematic = true;
     }
 
     private void LaunchBall()
     {
         if(isBallLaunched) return;
         isBallLaunched = true;
+        transform.parent = null;
+        ballRB.isKinematic = false;
         ballRB.AddForce(transform.forward * force, ForceMode.Impulse);
     }
 }
